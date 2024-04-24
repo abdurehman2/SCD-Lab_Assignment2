@@ -1,0 +1,13 @@
+name: Scehduled-Tasks Workflow
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # This means the action will run every day at midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Hello World
+        run: echo "Hello, World!"
