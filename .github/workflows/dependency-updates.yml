@@ -1,10 +1,30 @@
-name: Dependency Update Workflow
+name: Automated Dependency Updates
 
-version: 2
-updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 10
-    versioning-strategy: "auto"
+on:
+  schedule:
+    - cron: "0 0 * * *" # Run every day at midnight
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Check for updates and create pull requests
+        uses: dependabot/dependabot-core@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          directory: "/" # Specify the directory containing the dependencies to update
+          update_schedule: "daily"
+          package_manager: "npm" # or 'maven', 'composer', etc. depending on your project's package manager
+
